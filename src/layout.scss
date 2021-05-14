@@ -1,0 +1,107 @@
+$background: #2e2d2d;
+$yellow: #ffd600;
+$textC1: #e5e5e5;
+$textC2: #232323;
+
+body {
+  background: $background;
+  font-family: 'Segoe UI';
+  box-sizing: border-box;
+}
+
+.calculator {
+  width: 294px;
+  height: 512px;
+  margin: 2rem auto;
+  background: #232323;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35);
+}
+
+.buttonWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nonselect {
+  cursor: pointer;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefix */
+}
+
+.button {
+  width: 69px;
+  height: 57px;
+  background: #3f3f3f;
+  border: 1px solid #383838;
+  line-height: 57px;
+  margin: 0.5px;
+
+  font-weight: normal;
+  font-size: 23px;
+  text-align: center;
+  color: $textC1;
+
+  &:hover {
+    filter: brightness(80%);
+  }
+}
+
+#clear {
+  width: 139px;
+}
+
+#equals {
+  color: $textC2;
+  background: $yellow;
+  width: 141px;
+}
+
+.tabs {
+  font-weight: normal;
+  font-size: 14px;
+  text-align: left;
+  color: $textC1;
+  display: flex;
+  > div {
+    padding: 16px;
+  }
+}
+
+.sin {
+  color: $yellow;
+}
+
+#display {
+  height: 136px;
+  font-weight: normal;
+  font-size: 24px;
+  text-align: right;
+  color: #e5e5e5;
+  padding: 24px 24px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.calculations {
+  background: transparent;
+  border: none;
+  color: #e5e5e5;
+  font-size: 24px;
+  width: 100%;
+  text-align: right;
+}
+
+.result {
+  color: $yellow;
+}
+
+.bred {
+  border: 1px solid red;
+}

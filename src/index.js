@@ -1,15 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from './redux/store';
-import { addArticle } from './redux/actions';
+import store from './store';
 
 const rootElement = document.getElementById('root');
 window.store = store;
-window.addArticle = addArticle;
+// window.addArticle = addArticle;
 
 ReactDOM.render(
   <React.StrictMode>
