@@ -79,7 +79,7 @@ body {
 #display {
   height: 136px;
   font-weight: normal;
-  font-size: 24px;
+  font-size: 20px;
   text-align: right;
   color: #e5e5e5;
   padding: 24px 24px 0;
@@ -93,9 +93,18 @@ body {
   background: transparent;
   border: none;
   color: #e5e5e5;
-  font-size: 24px;
+  font-size: 15px;
   width: 100%;
   text-align: right;
+  max-width: 294px;
+  word-break: break-all;
+  overflow-y: scroll;
+  max-height: 105px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.calculations::-webkit-scrollbar {
+  display: none;
 }
 
 .result {

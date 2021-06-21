@@ -4,20 +4,32 @@ import { buttons } from './buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setCurrentValue,
-  history,
-  setPrevVal,
   setCurrentSign,
+  setPreviousSign,
+  setFormula,
+  // history,
   clearCurrentValue,
+  clearAll,
 } from './redux/reducers/calcSlice';
 
 const Layout = () => {
   const dispatch = useDispatch();
+  const [warning, setWarning] = useState(false);
 
-  const currentValue = useSelector((state) => state?.calc.currentValue);
-  // const currentSign = useSelector((state) => state?.calc.currentSign);
-  // const prevVal = useSelector((state) => state?.calc.prevVal);
+  const calculator = useSelector((state) => state?.calc);
+  console.log(calculator, 'calculator');
+  const { curValue, curSign, formula } = calculator;
+
+  // const lastInput = formula[formula.length - 1];
+  console.log(calculator.curValue, 'calculator.curSign');
+  console.log(calculator.curSign, 'calculator.curSign');
+  console.log(calculator.prevSign, 'calculator.prevSign');
+  const operator = /[*+‑/]$/;
+  // console.log(lastInput, 'lastInput');
+
   const handleKeyDown = (e) => {
-    switch (e.key.toLowerCase()) {
+    const key = e.key.toLowerCase();
+    switch (key) {
       case '0':
       case '1':
       case '2':
@@ -28,47 +40,54 @@ const Layout = () => {
       case '7':
       case '8':
       case '9':
-      case '(':
-      case ')':
-        // rei TODO: if length 1 and 1-9 is pressed, replace 0 with 1-9
-        dispatch(setCurrentValue(e.key.toLowerCase()));
+        if (curValue.length <= 22) {
+          dispatch(setCurrentValue(key));
+        } else {
+          setWarning(true);
+        }
         break;
       case 'c':
         dispatch(clearCurrentValue());
         break;
-
+      case 'a':
+        dispatch(clearAll());
+        break;
       case '/':
-      case 'x':
-      // if prevVal length
+      case '*':
       case '+':
       case '-':
+        // if got numbers in memory
+        if (curValue.length > 0) {
+          // add numbers to formula
+          dispatch(setFormula(curValue));
+          // clear memory of nums
+          dispatch(clearCurrentValue());
+          // add operator to curSign (backup)
+          dispatch(setCurrentSign(key));
+          // add operator to the formula
+          dispatch(setFormula(key));
+        }
+
+        // if currentSign exists pass cur to prev, overwrite cursign
+        if (curSign.length > 0) {
+          dispatch(setPreviousSign(curSign));
+          dispatch(setCurrentSign(key));
+        }
+        break;
+
       case '.':
-        const containsDot = /\./.test(currentValue);
+        const containsDot = /\./.test(curValue);
         if (!containsDot) {
           dispatch(setCurrentValue(e.key.toLowerCase()));
         }
         break;
       case '%':
       case 'enter':
-
+        break;
       default:
         break;
     }
   };
-
-  // done // rei TODO: capture current number click
-  // done // rei TODO: capture current number press
-  /*
-  
-  const isOperator  =  /[x/+-]/
-  
-  0. Poisition current val and eval string in Ui
-  1. add 22 digit limit and display a message for 1 second
-  2. if isOperator store currentValue into evaluation string
-  3. endsWithNegativeSign = /\d[x/+‑]{1}‑$/,
-  
-  
-  */
 
   const handleClick = (e) => {
     console.log(e.target.value, 'clicky');
@@ -80,17 +99,29 @@ const Layout = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentValue]);
+  }, [curValue]);
+
+  // clear warning after a second
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setWarning(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [warning]);
+
+  let current = curValue.length === 0 ? '0' : curValue;
+  console.log(current, 'current');
+
+  // display warning
+  if (warning) {
+    current = 'DIGIT LIMIT REACHED';
+  }
 
   return (
     <div className="calculator">
       <div id="display">
-        {currentValue && (
-          <div className="calculations">
-            {currentValue === '' ? '0' : currentValue}
-          </div>
-        )}
-        <div className="result">638</div>
+        <div className="calculations">{formula.join('')}</div>
+        <div className="current result">{current}</div>
       </div>
       <div className="tabs bred">
         <div className="history nonselect">History</div>
