@@ -7,10 +7,6 @@ export const buttons = [
     id: 'clear-all',
     value: 'AC',
   },
-  // {
-  //   id: 'percentage',
-  //   value: '%',
-  // },
   {
     id: 'divide',
     value: '/',
