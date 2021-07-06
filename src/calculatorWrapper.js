@@ -39,6 +39,7 @@ const CalculatorWrapper = () => {
 	const handleOperators = (key) => {
 		key = key === '*' ? 'x' : key;
 
+		// if answer is shown add it to the output to be calculated
 		if (answer) {
 			setOutput([tempVal, key]);
 			setTempVal('');
@@ -46,32 +47,46 @@ const CalculatorWrapper = () => {
 			return;
 		}
 
-		// add "-" if ends with operator
+		// add num from mem and operator to be calculated alter
+		if (!isTempValEmpty) {
+			setOutput([...output, tempVal, key]);
+			setTempVal('');
+			return;
+		}
+
+		// add negative sign if tempVal and
 		if (key === '-' && isTempValEmpty && !endsWithOperator) {
 			setOutput([...output, key]);
 			return;
 		}
 
-		if (isTempValEmpty && !endsWithOperator) {
-			setOutput([...output, key]);
-		}
-
-		if (!isTempValEmpty) {
-			// store num + opr in output then clear mem
-			setOutput([...output, tempVal, key]);
-			setTempVal('');
-		} else if (
-			// add second opr. unless it's the first input in output
+		// add second opr. unless it's the first input in output
+		if (
+			isTempValEmpty &&
 			endsWithOperator &&
 			!endsWithDoubleOperator &&
 			key === '-' &&
 			!(output.length <= 1)
 		) {
 			setOutput([...output, key]);
-			// replace last 2 oper. with new oper.
-		} else if (endsWithDoubleOperator && key !== '-') {
+			return;
+		}
+		// replace last 2 opr. with new oper.
+		if (isTempValEmpty && endsWithDoubleOperator && key !== '-') {
+			console.log('1');
+
 			const newOutput = output.slice(0, -2);
 			setOutput([...newOutput, key]);
+			return;
+		}
+
+		// replace single operator unless it's the first val in output
+		if (isTempValEmpty && endsWithOperator && output.length !== 1) {
+			console.log('2');
+
+			const newOutput = output.slice(0, -1);
+			setOutput([...newOutput, key]);
+			return;
 		}
 	};
 
@@ -168,10 +183,9 @@ const CalculatorWrapper = () => {
 				Math.round(1000000000000 * eval(expression)) / 1000000000000;
 			setTempVal(String(evaluation));
 			setOutput([...output, '=', evaluation]);
-			setHistory([...history, [...output, '=', evaluation].join('')]);
+			setHistory([[...output, '=', evaluation].join(''), ...history]);
 			setEvaluate(false);
 			setAnswer(true);
-			console.log('history', history);
 		}
 	}, [evaluate, history, output]);
 
@@ -196,6 +210,7 @@ const CalculatorWrapper = () => {
 			warning={warning}
 			output={output}
 			tempVal={tempVal}
+			history={history}
 			handleClick={handleClick}
 		/>
 	);
